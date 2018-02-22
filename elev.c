@@ -68,9 +68,6 @@ void elev_set_motor_direction(elev_motor_direction_t dirn) {
     }
 }
 
-elev_motor_direction_t elev_get_motor_direction () { // HVORDAN FÅ DIRECTION? Hva er motordir, hvordan kommuniserer vi med den?
-    return 0;
-}
 
 void elev_set_door_open_lamp(int value) {
     if (value)

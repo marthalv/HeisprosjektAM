@@ -1,29 +1,40 @@
 #include "statemachine.h"
+
 void statemachine_set_current_state (struct State *state) {
-    state->current_floor = elev_get_floor_sensor_signal();
+    state->current_position = elev_get_floor_sensor_signal(); // KANSKJE VI IKKE TRENGER DENNE FUNKSJONEN? Oppdatere state i andre funksjoner
 }
 
-void statemachine_initialize(struct State *state) { // Makes sure that the elevator comes in a defined state after startup
-    // IGNORER STOPPKNAPP! Legg til funksjonalitet som ignorerer stoppknapp senere
-    eventmanager_initialize(&queue);
-    while (elev_get_floor_sensor_signal() == -1) {
+void statemachine_initialize(struct State *state, struct Queue *queue) { // Makes sure that the elevator comes in a defined
+                                                                        // state after startup
+    while (elev_get_floor_sensor_signal() == -1) { // Ignores stop button and orders made while the elevator is between floors
         elev_set_motor_direction(-1);
-        eventmanager_initialize(&queue);
     }
+    
     elev_set_motor_direction(1);
     elev_set_motor_direction(0);
-    
-    timer_reset();
-    elev_set_door_open_lamp(1);
-    while (1) { // Bruk funksjon fra eventmanager.c
-        if (timer_time_is_up() == 1) {
-            elev_set_door_open_lamp(0);
-            break;
-        }
-    }
+
+    // Spør studass om døra må åpnes etter initialisering (ref. punkt 13 på evalueringskriteriene)
+
     statemachine_set_current_state(state);
 }
 
-
-
+int statemachine_check_for_possible_stop_elevator (struct Queue *queue, struct State *state) { // FINN ET ANNET NAVN PÅ FUNKSJONEN
+    
+    if (state->current_position == -1)
+        return 0;
+    
+    if (state->direction == DIRN_UP && queue->going_up_queue[state->current_position])
+        return 1;
+    
+    if (state->direction == DIRN_DOWN && queue->going_down_queue[state->current_position])
+        return 1;
+    
+    for (int i = 0; i < FLOORS; i++) {
+        if ((queue->floor_target_queue[i] == state->current_position) && (state->current_position != -1)) {
+            queue->floor_target_queue[i] = -1; // Kan være i en annen funksjon, se an
+            return 1;
+        }
+    }
+    return 0;
+}
 

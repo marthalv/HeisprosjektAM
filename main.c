@@ -28,5 +28,19 @@ int main() {
         }
     }
 
+    
+    
+    /*
+     
+     If-setning som stopper basert på om statemachine-funksjonen statemachine_... returnerer 1 eller 0. Setter i gang timer.
+     
+     */
+    
+    
+    /*
+     
+     
+     
+     */
     return 0;
 }

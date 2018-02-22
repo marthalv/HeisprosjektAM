@@ -4,13 +4,10 @@
 #include "eventmanager.h"
 #include "channels.h"
 
-/* typedef enum
-{IDLE, MOVING, STOP, EMERGENCY_STOP} statemachine_movement_state;
- */
 
 struct State {
-    int current_floor;
+    int current_position;
+    int ordered_floor; // Newest ordered floor
+    bool is_door_open;
     elev_motor_direction_t direction;
-    //statemachine_movement_state movement_state;
 };
-
