@@ -1,8 +1,29 @@
 #include "statemachine.h"
 
+
 void statemachine_set_current_state (struct State *state) {
-    state->current_position = elev_get_floor_sensor_signal(); // KANSKJE VI IKKE TRENGER DENNE FUNKSJONEN? Oppdatere state i andre funksjoner
+    state->current_position = elev_get_floor_sensor_signal(); // KANSKJE VI IKKE TRENGER DENNE FUNKSJONEN? Oppdatere statei andre funksjoner
+	
 }
+
+//Hva returnerer elev_get_button_signal()?
+void statemachin_set_ordered_floor(struct State *state) {
+	//state->ordered_floor = 
+}
+
+void statemachin_set_is_stop_activ(struct State *state) {
+	switch (elev_get_stop_signal()) {
+	case(1): state->is_stop_activ = 1; break;
+	case(0): state->is_stop_activ = 0; break;
+	}
+}
+
+/*void statemachin_set_is_door_open(State * state)
+{
+	//.....
+}
+*/
+
 
 void statemachine_initialize(struct State *state, struct Queue *queue) { // Makes sure that the elevator comes in a defined
                                                                         // state after startup
@@ -38,4 +59,3 @@ int statemachine_check_for_possible_stop_elevator (struct Queue *queue, struct S
     return 0;
 }
 
-// Test
