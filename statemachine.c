@@ -38,3 +38,4 @@ int statemachine_check_for_possible_stop_elevator (struct Queue *queue, struct S
     return 0;
 }
 
+// Test
