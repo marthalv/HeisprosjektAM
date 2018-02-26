@@ -12,6 +12,7 @@ struct State;
 struct Order;
 
 //Headerfil hvor man kan bestemme lysene etc. 
+//endre alle navn, men kanskje de kan være i en annen header?
 
 //Lys etter heisens posisjon på/av
 void eventcontroller_floor_indicator_light(struct State *state);

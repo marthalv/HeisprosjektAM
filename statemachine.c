@@ -59,3 +59,48 @@ int statemachine_check_for_possible_stop_elevator (struct Queue *queue, struct S
     return 0;
 }
 
+void statemachin_print_position(State * state)
+{
+	printf("Current position: ", state->current_position, "/n");
+	return;
+}
+
+void statemachine_print_ordered_floor(State * state)
+{
+	printf("Next ordered floor: ", state->ordered_floor, "/n");
+	return;
+}
+
+void statemachin_print_dirn(State * state)
+{
+	if (state->direction == DIRN_UP) {
+		printf("Direction: up");
+		return;
+	}
+	if (state->direction == DIRN_DOWN) {
+		printf("Direction: down");
+		return;
+	}
+	if (state->direction == DIRN_STOP) {
+		printf("Direction: no movement");
+		return;
+	}
+}
+
+void statemachin_print_door_state(State * state)
+{
+	if (state->is_door_open == true) {
+		printf("Door is open");
+	}
+	return;
+}
+
+void statemachin_print_stop_state(State * state)
+{
+	if (state->is_stop_activ == true) {
+		printf("Emergency stop is activ")
+	}
+	return;
+}
+
+

@@ -13,7 +13,8 @@ void eventcontroller_floor_indicator_light(struct State *state)
 	case(2): elev_set_floor_indicator(2); break;//3st floor
 	case(3): elev_set_floor_indicator(3); break;//4st floor
 	
-	case(-1): return; //Gjør ingenting om heisen er mellom to etasjer. 
+	case(-1): return; //Gjør ingenting om heisen er mellom to etasjer.
+	//må vi ha default
 
 	}
 }
