@@ -1,14 +1,24 @@
+#ifndef __INCLUDE_QUEUE_H__
+#define __INCLUDE_QUEUE_H__
+
 #include <stdio.h>
 #include "elev.h"
 #include "statemachine.h"
+
 //#include "timer.h"
-#include "eventmanager.h"
+
+
+//static int FLOORS = 4;
+
+
 
 struct Queue {
-int going_up_queue[FLOORS];
-int going_down_queue[FLOORS];
-int floor_target_queue[FLOORS];
+int going_up_queue[N_FLOORS];
+int going_down_queue[N_FLOORS];
+int floor_target_queue[N_FLOORS];
 };
 
 void queue_add_to_up_and_down_queue (struct Queue *queue);
 void queue_add_to_floor_target_queue (struct Queue *queue, struct State *state);
+
+#endif

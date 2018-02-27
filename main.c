@@ -1,9 +1,9 @@
 #include "elev.h"
-#include "eventmanager.h"
+
 #include "lighthandler.h"
 #include "queue.h"
 #include "statemachine.h"
-#include "timer.h"
+
 #include "channels.h"
 #include "io.h"
 #include <stdio.h>
@@ -19,12 +19,22 @@ int main() {
     printf("Press STOP button to stop elevator and exit program.\n");
 
     elev_set_motor_direction(DIRN_UP);
+    struct State state_1;
+    struct Queue queue_1;
+    
+    queue_initialize(&queue_1);
 
+    statemachine_initialize(&state_1);
 	
 
     while (1) {
+	
+	statemachine_set_current_state(&state_1);
 
-		eventcontroller_floor_indicator_light();
+	eventcontroller_floor_indicator_light(&state_1);
+	
+	statemachin_set_ordered_floor(&state_1);
+	
 
 
         // Change direction when we reach top/bottom floor
@@ -36,9 +46,17 @@ int main() {
 
         // Stop elevator and exit program if the stop button is pressed
         if (elev_get_stop_signal()) {
+	    elev_set_stop_lamp(1);
             elev_set_motor_direction(DIRN_STOP);
             break;
         }
+
+	queue_add_to_up_and_down_queue(&queue_1);
+	queue_add_to_floor_target_queue(&queue_1, &state_1);
+	queue_delete_from_up_and_down_queue(&queue_1, &state_1);
+	queue_delete_from_floor_target_queue(&queue_1, &state_1);
+       
+	
     }
 
     

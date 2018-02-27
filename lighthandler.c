@@ -4,9 +4,9 @@
 //i en while i main, vil etasje 1 lyse til etasje 2 registreres? Usikker på det. 
 //forstår ikke helt hva som menes i elev.h på denne. 
 
-void eventcontroller_floor_indicator_light()
+void eventcontroller_floor_indicator_light(struct State *state)
 {
-	switch (elev_get_floor_sensor_signal()) {
+	switch (state->current_position) {
 	
 	case(0): elev_set_floor_indicator(0); break; //1st floor
 	case(1): elev_set_floor_indicator(1); break;//2st floor
@@ -39,15 +39,10 @@ void eventcontroller_door_lamp(struct State *state)
 	case(0): elev_set_door_lamp(0); break;
 	}
 }
+*/
 
-void eventcontroller_stop_lamp(struct State *state)
-{
-	switch (state->is_stop_activ) {
-	case(1): elev_set_stop_lamp(1); break;
-	case(0): elev_set_stop_lamp(0); break;
-	}
-}
 
+/*
 void eventcontroller_order_light(Order * order, State * state)
 {
 	if (order->floor != state->current_position) {

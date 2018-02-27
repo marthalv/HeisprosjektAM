@@ -8,13 +8,18 @@ void statemachine_set_current_state ( struct State *state) {
 	
 }
 
-/*
-//Hva returnerer elev_get_button_signal()?
-void statemachin_set_ordered_floor( State *state) {
-	//state->ordered_floor = 
+
+
+void statemachin_set_ordered_floor( struct State *state) {
+	for(int i =0; i < N_FLOORS; i++){
+	   if (elev_get_button_signal(BUTTON_COMMAND, i)==1){
+		state->ordered_floor = i;
+	 }
+	}
 }
 
-void statemachin_set_is_stop_activ( State *state) {
+/*
+void statemachin_set_is_stop_activ( struct State *state) {
 	switch (elev_get_stop_signal()) {
 	case(1): state->is_stop_activ = 1; break;
 	case(0): state->is_stop_activ = 0; break;
@@ -28,7 +33,7 @@ void statemachin_set_is_stop_activ( State *state) {
 */
 
 
-void statemachine_initialize( struct State *state, struct Queue *queue) { // Makes sure that the elevator comes in a defined
+void statemachine_initialize( struct State *state) { // Makes sure that the elevator comes in a defined
                                                                         // state after startup
     while (elev_get_floor_sensor_signal() == -1) { // Ignores stop button and orders made while the elevator is between floors
         elev_set_motor_direction(-1);
@@ -40,9 +45,10 @@ void statemachine_initialize( struct State *state, struct Queue *queue) { // Mak
     // Spør studass om døra må åpnes etter initialisering (ref. punkt 13 på evalueringskriteriene)
 
     statemachine_set_current_state(state);
+    state->ordered_floor = -1;
 }
 
-int statemachine_check_for_possible_stop_elevator ( Queue *queue, State *state) { // FINN ET ANNET NAVN PÅ FUNKSJONEN
+int statemachine_check_for_possible_stop_elevator ( struct Queue *queue, struct State *state) { // FINN ET ANNET NAVN PÅ FUNKSJONEN, skift rekkefølge
     
     if (state->current_position == -1)
         return 0;
@@ -53,7 +59,7 @@ int statemachine_check_for_possible_stop_elevator ( Queue *queue, State *state) 
     if (state->direction == DIRN_DOWN && queue->going_down_queue[state->current_position])
         return 1;
     
-    for (int i = 0; i < FLOORS; i++) {
+    for (int i = 0; i < N_FLOORS; i++) {
         if ((queue->floor_target_queue[i] == state->current_position) && (state->current_position != -1)) {
             queue->floor_target_queue[i] = -1; // Kan være i en annen funksjon, se an
             return 1;
