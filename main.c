@@ -20,11 +20,11 @@ int main() {
 
     elev_set_motor_direction(DIRN_UP);
 
-	State state;
+	struct State state;
 
     while (1) {
 
-		state_set_current_state(&state);
+		statemachine_set_current_state(&state);
 		eventcontroller_floor_indicator_light(&state);
 
 
