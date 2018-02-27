@@ -1,4 +1,11 @@
 #include "elev.h"
+#include "eventmanager.h"
+#include "lighthandler.h"
+#include "queue.h"
+#include "statemachine.h"
+#include "timer.h"
+#include "channels.h"
+#include "io.h"
 #include <stdio.h>
 
 
@@ -13,7 +20,14 @@ int main() {
 
     elev_set_motor_direction(DIRN_UP);
 
+	State state;
+
     while (1) {
+
+		state_set_current_state(&state);
+		eventcontroller_floor_indicator_light(&state);
+
+
         // Change direction when we reach top/bottom floor
         if (elev_get_floor_sensor_signal() == N_FLOORS - 1) {
             elev_set_motor_direction(DIRN_DOWN);
