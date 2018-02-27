@@ -22,18 +22,15 @@ int main() {
     struct State state_1;
     struct Queue queue_1;
     
-    queue_initialize(&queue_1);
+    queue_initialize(&queue_1); // Deletes all previous orders from the queues
 
-    statemachine_initialize(&state_1);
+    statemachine_initialize(&state_1); // Makes sure that the elevator comes in a defined state
 	
 
     while (1) {
-	
-	statemachine_set_current_state(&state_1);
-
-	eventcontroller_floor_indicator_light(&state_1);
-	
-	statemachin_set_ordered_floor(&state_1);
+        statemachine_set_current_state(&state_1);
+        eventcontroller_floor_indicator_light(&state_1);
+        statemachine_set_ordered_floor(&state_1);
 	
 
 

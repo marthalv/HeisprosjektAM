@@ -3,37 +3,41 @@
 
 
 
-void statemachine_set_current_state ( struct State *state) {
-    state->current_position = elev_get_floor_sensor_signal(); // KANSKJE VI IKKE TRENGER DENNE FUNKSJONEN? Oppdatere statei andre funksjoner
+void statemachine_set_current_state (struct State* state) {
+    state->current_position = elev_get_floor_sensor_signal();
+    // Burde vi legge til set_ordered_floor osv. i set_current_state? Evt. endre navn på denne funksjonen
 	
 }
 
 
 
-void statemachin_set_ordered_floor( struct State *state) {
-	for(int i =0; i < N_FLOORS; i++){
-	   if (elev_get_button_signal(BUTTON_COMMAND, i)==1){
+void statemachine_set_ordered_floor(struct State* state) {
+	for (int i = 0; i < N_FLOORS; i++){
+	   if (elev_get_button_signal(BUTTON_COMMAND, i) == 1) {
 		state->ordered_floor = i;
 	 }
 	}
 }
 
 /*
-void statemachin_set_is_stop_activ( struct State *state) {
+void statemachine_set_is_stop_active(struct State* state) {
 	switch (elev_get_stop_signal()) {
-	case(1): state->is_stop_activ = 1; break;
-	case(0): state->is_stop_activ = 0; break;
+        case(1): 
+        state->is_stop_active = 1; break;
+ 
+        case(0): 
+        state->is_stop_active = 0; break;
 	}
 }
 
-/*void statemachin_set_is_door_open(State * state)
+/*void statemachine_set_is_door_open(struct State* state)
 {
 	//.....
 }
 */
 
 
-void statemachine_initialize( struct State *state) { // Makes sure that the elevator comes in a defined
+void statemachine_initialize(struct State* state) { // Makes sure that the elevator comes in a defined
                                                                         // state after startup
     while (elev_get_floor_sensor_signal() == -1) { // Ignores stop button and orders made while the elevator is between floors
         elev_set_motor_direction(-1);
@@ -42,14 +46,11 @@ void statemachine_initialize( struct State *state) { // Makes sure that the elev
     elev_set_motor_direction(1);
     elev_set_motor_direction(0);
 
-    // Spør studass om døra må åpnes etter initialisering (ref. punkt 13 på evalueringskriteriene)
-
     statemachine_set_current_state(state);
     state->ordered_floor = -1;
 }
 
-int statemachine_check_for_possible_stop_elevator ( struct Queue *queue, struct State *state) { // FINN ET ANNET NAVN PÅ FUNKSJONEN, skift rekkefølge
-    
+int statemachine_check_for_possible_stop_elevator (struct State* state, struct Queue* queue) { // FINN ET ANNET NAVN PÅ FUNKSJONEN
     if (state->current_position == -1)
         return 0;
     
@@ -69,19 +70,19 @@ int statemachine_check_for_possible_stop_elevator ( struct Queue *queue, struct 
 }
 
 /*
-void statemachin_print_position(State * state)
+void statemachine_print_position(struct State* state)
 {
 	printf("Current position: ", state->current_position, "/n");
 	return;
 }
 
-void statemachine_print_ordered_floor(State * state)
+void statemachine_print_ordered_floor(struct State* state)
 {
 	printf("Next ordered floor: ", state->ordered_floor, "/n");
 	return;
 }
 
-void statemachin_print_dirn(State * state)
+void statemachine_print_dirn(struct State* state)
 {
 	if (state->direction == DIRN_UP) {
 		printf("Direction: up");
@@ -97,18 +98,18 @@ void statemachin_print_dirn(State * state)
 	}
 }
 
-void statemachin_print_door_state(State * state)
+void statemachine_print_door_state(struct State* state)
 {
-	if (state->is_door_open == true) {
+	if (state->is_door_open == 1) {
 		printf("Door is open");
 	}
 	return;
 }
 
-void statemachin_print_stop_state(State * state)
+void statemachin_print_stop_state(struct State* state)
 {
-	if (state->is_stop_activ == true) {
-		printf("Emergency stop is activ")
+	if (state->is_stop_active == 1) {
+		printf("Emergency stop is active")
 	}
 	return;
 }

@@ -1,20 +1,21 @@
 #include "lighthandler.h"
 
-//Setter lysene i samsvar med statemachins current position
-//i en while i main, vil etasje 1 lyse til etasje 2 registreres? Usikker på det. 
-//forstår ikke helt hva som menes i elev.h på denne. 
-
-void eventcontroller_floor_indicator_light(struct State *state)
-{
+void eventcontroller_floor_indicator_light(struct State* state) { // Sets the floor indicator lights based on which position the elevator is in
 	switch (state->current_position) {
-	
-	case(0): elev_set_floor_indicator(0); break; //1st floor
-	case(1): elev_set_floor_indicator(1); break;//2st floor
-	case(2): elev_set_floor_indicator(2); break;//3st floor
-	case(3): elev_set_floor_indicator(3); break;//4st floor
-	
-	case(-1): return; //Gjør ingenting om heisen er mellom to etasjer.
-	//må vi ha default
+        case(0):
+            elev_set_floor_indicator(0);
+            break; //1st floor
+        case(1):
+            elev_set_floor_indicator(1);
+            break; //2nd floor
+        case(2):
+            elev_set_floor_indicator(2);
+            break; //3rd floor
+        case(3):
+            elev_set_floor_indicator(3);
+            break; //4th floor
+        case(-1):
+            return; // Does nothing while in between floors
 
 	}
 }
