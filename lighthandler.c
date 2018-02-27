@@ -4,9 +4,9 @@
 //i en while i main, vil etasje 1 lyse til etasje 2 registreres? Usikker på det. 
 //forstår ikke helt hva som menes i elev.h på denne. 
 
-void eventcontroller_floor_indicator_light(struct State *state)
+void eventcontroller_floor_indicator_light()
 {
-	switch (state->current_position) {
+	switch (elev_get_floor_sensor_signal()) {
 	
 	case(0): elev_set_floor_indicator(0); break; //1st floor
 	case(1): elev_set_floor_indicator(1); break;//2st floor
@@ -18,7 +18,7 @@ void eventcontroller_floor_indicator_light(struct State *state)
 
 	}
 }
-
+/*
 //Kan bruke retur verdien fra funksjonen over, og skru det av når den er i etasjen over
 //vil lyse da lyse selv om current_position er -1? 
 //det var tanken bak funksjonen, men vet ikke om det fungerer
@@ -30,7 +30,7 @@ void eventcontroller_inside_elevator_light_off(int floor_light) {
 		return;		
 	}
 }
-*/
+
 
 void eventcontroller_door_lamp(struct State *state)
 {
@@ -59,7 +59,7 @@ void eventcontroller_order_light(Order * order, State * state)
 		return;
 	}
 }
-
+*/
 
 
 

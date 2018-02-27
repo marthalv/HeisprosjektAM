@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "elev.h"
 #include "statemachine.h"
-#include "timer.h"
-#include "eventmanager.h" 
+//#include "timer.h"
+#include "eventmanager.h"
 
 struct Queue {
 int going_up_queue[FLOORS];

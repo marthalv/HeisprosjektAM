@@ -12,9 +12,11 @@
 //endre alle navn, men kanskje de kan være i en annen header?
 
 //Lys etter heisens posisjon på/av
-void eventcontroller_floor_indicator_light(struct State *state);
+void eventcontroller_floor_indicator_light();
 //void eventcontroller_inside_elevator_light_off(int floor_light);
 
+
+/*
 //Dørlys på/av, bruker statemachin is_door_open
 void eventcontroller_door_lamp(struct State *state);
 
@@ -23,7 +25,7 @@ void eventcontroller_stop_lamp(struct State *state);
 
 //Setter bestillinglys på/av
 void eventcontroller_order_light(struct Order *order, struct State *state);
-
+*/
 
 
 

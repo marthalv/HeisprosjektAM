@@ -1,17 +1,20 @@
 #include "statemachine.h"
 
 
-void statemachine_set_current_state (struct State *state) {
+
+
+void statemachine_set_current_state ( struct State *state) {
     state->current_position = elev_get_floor_sensor_signal(); // KANSKJE VI IKKE TRENGER DENNE FUNKSJONEN? Oppdatere statei andre funksjoner
 	
 }
 
+/*
 //Hva returnerer elev_get_button_signal()?
-void statemachin_set_ordered_floor(struct State *state) {
+void statemachin_set_ordered_floor( State *state) {
 	//state->ordered_floor = 
 }
 
-void statemachin_set_is_stop_activ(struct State *state) {
+void statemachin_set_is_stop_activ( State *state) {
 	switch (elev_get_stop_signal()) {
 	case(1): state->is_stop_activ = 1; break;
 	case(0): state->is_stop_activ = 0; break;
@@ -25,7 +28,7 @@ void statemachin_set_is_stop_activ(struct State *state) {
 */
 
 
-void statemachine_initialize(struct State *state, struct Queue *queue) { // Makes sure that the elevator comes in a defined
+void statemachine_initialize( struct State *state, struct Queue *queue) { // Makes sure that the elevator comes in a defined
                                                                         // state after startup
     while (elev_get_floor_sensor_signal() == -1) { // Ignores stop button and orders made while the elevator is between floors
         elev_set_motor_direction(-1);
@@ -39,7 +42,7 @@ void statemachine_initialize(struct State *state, struct Queue *queue) { // Make
     statemachine_set_current_state(state);
 }
 
-int statemachine_check_for_possible_stop_elevator (struct Queue *queue, struct State *state) { // FINN ET ANNET NAVN PÅ FUNKSJONEN
+int statemachine_check_for_possible_stop_elevator ( Queue *queue, State *state) { // FINN ET ANNET NAVN PÅ FUNKSJONEN
     
     if (state->current_position == -1)
         return 0;
@@ -59,6 +62,7 @@ int statemachine_check_for_possible_stop_elevator (struct Queue *queue, struct S
     return 0;
 }
 
+/*
 void statemachin_print_position(State * state)
 {
 	printf("Current position: ", state->current_position, "/n");
@@ -102,5 +106,4 @@ void statemachin_print_stop_state(State * state)
 	}
 	return;
 }
-
-
+*/

@@ -20,12 +20,11 @@ int main() {
 
     elev_set_motor_direction(DIRN_UP);
 
-	struct State state;
+	
 
     while (1) {
 
-		statemachine_set_current_state(&state);
-		eventcontroller_floor_indicator_light(&state);
+		eventcontroller_floor_indicator_light();
 
 
         // Change direction when we reach top/bottom floor
