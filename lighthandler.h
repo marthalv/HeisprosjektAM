@@ -8,9 +8,6 @@
 #include "channels.h"
 
 
-struct State;
-struct Order;
-
 //Headerfil hvor man kan bestemme lysene etc. 
 //endre alle navn, men kanskje de kan være i en annen header?
 

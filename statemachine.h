@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include "elev.h"
 #include "timer.h"
-#include "eventmanager.h"
 #include "channels.h"
 
-struct Queue;
 
 struct State {
     int current_position;
