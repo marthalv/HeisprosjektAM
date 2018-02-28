@@ -23,30 +23,25 @@ void statemachine_run (struct State* state, struct Queue* queue)
             if (queue->floor_target_queue[0] != -1)
                 state->run_state = EXECUTE;
             
-            if (state->current_position != 0)
+            if ((elev_get_button_signal(BUTTON_CALL_DOWN, state->current_position))
+                || elev_get_button_signal(BUTTON_CALL_UP, state->current_position)
+                || (elev_get_button_signal(BUTTON_COMMAND, state->current_position))) // Kan gjøres mer elegant
             {
-                // Sjekke om noen skal ned
+                queue_delete_from_up_and_down_queue(queue, state);
+                state->run_state = STOP;
+                break;
             }
-            
-            if (state->current_position != (N_FLOORS - 1))
-            {
-                // Sjekke om noen skal opp
-            }
-            
             
             for (int floor = 0; floor < N_FLOORS; floor++)
             {
-                if (queue->floor_target_queue[floor] != -1)
-                    
+                if (queue->going_up_queue[floor] || queue->going_down_queue[floor])
+                {
+                    state->ordered_floor = floor; // HMMMMM..............
+                    queue_add_to_floor_target_queue(queue, state);
+                    state->run_state = EXECUTE;
+                }
             }
             
-            
-            /*
-             
-             Skal sjekke om det er noen bestillinger (iterere gjennom queuene)
-             Når bestilling mottas: state->run_state = EXECUTE
-             
-             */
 
 		case (EXECUTE):
             /*

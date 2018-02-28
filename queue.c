@@ -51,6 +51,8 @@ void queue_add_to_floor_target_queue (struct Queue* queue, struct State* state)
     
 }
 
+
+// SLÅ SAMMEN DISSE FUNSKJONENE????
 // Deletes order when elevator arrives at floor
 void queue_delete_from_up_and_down_queue (struct Queue* queue, struct State* state)
 {
