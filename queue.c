@@ -46,16 +46,27 @@ void queue_delete_from_up_and_down_queue (struct Queue* queue, struct State* sta
     }
 }
 
-void queue_delete_from_floor_target_queue (struct Queue *queue, struct State *state) { // nr 4 lyser når 1 slukkes, finn ut av det
-    if (state->current_position != -1) {
-        queue->floor_target_queue[state->current_position] = -1;
-        elev_set_button_lamp(BUTTON_COMMAND, state->current_position, 0);
-	}
+void queue_delete_from_floor_target_queue (struct Queue *queue, struct State *state) // lys nr 1 slukkes ikke om ingen andre lys er påtrykt
+{ 
     
+    if (state->current_position != -1) {
+        for (int i = 0; i < N_FLOORS; i++) {
+		if (queue->floor_target_queue[i] == state->current_position) {
+			//queue->floor_target_queue[i] = -1;
+        		elev_set_button_lamp(BUTTON_COMMAND, state->current_position, 0);
+		}
+	   }
+	}
+
     for (int i = 0; i < N_FLOORS-1; i++) {
         if (queue->floor_target_queue[i] == -1) {
             queue->floor_target_queue[i] = queue->floor_target_queue[i+1];
             queue->floor_target_queue[i+1] = -1;
         }
     }
+
 }
+
+
+
+

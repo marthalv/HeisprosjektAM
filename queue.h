@@ -19,4 +19,6 @@ void queue_add_to_floor_target_queue (struct Queue* queue, struct State* state);
 void queue_delete_from_up_and_down_queue (struct Queue* queue, struct State* state);
 void queue_delete_from_floor_target_queue (struct Queue *queue, struct State *state);
 
+
+
 #endif

@@ -1,5 +1,8 @@
+
+
 #include "eventmanager.h"
 
+/*
 //Kan vi bruke denne formen?
 void eventmanager_set_order(struct Order *order) {
 	for (int i = 0, i < FLOORS, i++) {
@@ -25,11 +28,14 @@ void eventmanager_open_door () { // Opens door
    // elev_set_door_open_lamp(1); gjøres i lys delen?
     state->is_door_open = 1;
 }
+*/
 
-void eventmanager_stop_elevator () {
-    elev_set_motor_direction(DIRN_STOP);
+void eventmanager_stop_elevator (struct State *state) {
+    elev_set_motor_direction(0);
+    state->direction == DIRN_STOP;
     // Kan legge til skifting av retning før stopp hvis det funker dårlig (ref. oppgavetekst)
 }
+
 
 
 

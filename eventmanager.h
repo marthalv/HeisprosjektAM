@@ -1,3 +1,5 @@
+#ifndef __INCLUDE_EVENTMANAGER_H__
+#define __INCLUDE_EVENTMANAGER_H__
 #include <stdio.h>
 #include "queue.h"
 #include "elev.h"
@@ -14,7 +16,11 @@ struct Order {
 };
 
 */
-static int FLOORS = 4;
+
 //void eventmanager_set_order(struct Order *order);
 
 //void eventmanager_initialize (struct Queue *queue);
+
+void eventmanager_stop_elevator (struct State *state);
+
+#endif
