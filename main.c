@@ -9,9 +9,11 @@
 #include <stdio.h>
 
 
-int main() {
+int main()
+{
     // Initialize hardware
-    if (!elev_init()) {
+    if (!elev_init())
+    {
         printf("Unable to initialize elevator hardware!\n");
         return 1;
     }
@@ -30,9 +32,11 @@ int main() {
     
    
 
-    while (1) {
+    while (1)
+    {
 	
-	if (statemachine_check_for_possible_stop_elevator(&state_1, &queue_1) == 1) {
+	if (statemachine_check_for_possible_stop_elevator(&state_1, &queue_1) == 1)
+    {
 		eventmanager_stop_elevator(&state_1);
 		timer_reset();
 	}
@@ -44,23 +48,24 @@ int main() {
 
 
         // Change direction when we reach top/bottom floor
-        if (elev_get_floor_sensor_signal() == N_FLOORS - 1) {
+        if (elev_get_floor_sensor_signal() == N_FLOORS - 1)
             elev_set_motor_direction(DIRN_DOWN);
-        } else if (elev_get_floor_sensor_signal() == 0) {
+        
+        else if (elev_get_floor_sensor_signal() == 0)
             elev_set_motor_direction(DIRN_UP);
-        }
-
         // Stop elevator and exit program if the stop button is pressed
-        if (elev_get_stop_signal()) {
-		if (state->current_position != -1) {
-			elev_set_door_open_lamp(1);
-		}
-
-	    elev_set_stop_lamp(1);
+        // VI HAR DENNE FUNKSJONALITETEN I STATEMACHINE_RUN
+        /*
+         if (elev_get_stop_signal()) {
+            if (state->current_position != -1)
+                elev_set_door_open_lamp(1);
+            
+            elev_set_stop_lamp(1);
             // elev_set_motor_direction(DIRN_STOP);  // HA DENNE I SWITCH I statemachine_run
             state->run_state = EMERGENCY_STOP;
             break;
         }
+        */
 	
 
 	queue_add_to_up_and_down_queue(&queue_1);

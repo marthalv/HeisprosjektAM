@@ -1,13 +1,15 @@
 #ifndef __INCLUDE_QUEUE_H__
 #define __INCLUDE_QUEUE_H__
 
+#pragma once
+
 #include <stdio.h>
 #include "elev.h"
 #include "statemachine.h"
+#include "timer.h"
 
-//#include "timer.h"
-
-struct Queue {
+struct Queue
+{
 int going_up_queue[N_FLOORS];
 int going_down_queue[N_FLOORS];
 int floor_target_queue[N_FLOORS];
