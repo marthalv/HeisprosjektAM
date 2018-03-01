@@ -9,7 +9,7 @@
 #include "channels.h"
 #include "queue.h"
 
-enum current_state {IDLE, EXECUTE, STOP, EMERGENCY_STOP}; // Spør studass om konvensjon for ENUM-navngiving
+enum current_state {IDLE, EXECUTE, NORMAL_STOP, EMERGENCY_STOP}; // Spør studass om konvensjon for ENUM-navngiving
 
 struct State
 {

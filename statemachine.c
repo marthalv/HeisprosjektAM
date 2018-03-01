@@ -6,7 +6,7 @@ void statemachine_run (struct State* state, struct Queue* queue)
 	if (elev_get_stop_signal()) // If the stop button is pressed
     {
         state->run_state = EMERGENCY_STOP;
-        break;
+        //break; kan kun brukes i en loop
     }
 
 	else
@@ -57,9 +57,28 @@ void statemachine_run (struct State* state, struct Queue* queue)
              
              */
 
-		case (STOP):
+		case (NORMAL_STOP):
+
+			if (state->current_position == queue->floor_target_queue[0]) { //Deletes from the queue if position is at position given by index 0 in queue
+				queue_delete_from_floor_target_queue(queue, state);
+			}
+
+			state->direction = DIRN_STOP; //Sets state direction to stop
+		    //Bør denne være her? 
+			timer_start_periode(); //The time periode is started
+			elev_set_door_open_lamp(1); //Activates lights
+
+			if (timer_time_is_up() == 1) { //Cheks if the time periode is up
+
+				elev_set_door_open_lamp(0); //Deactivates door lamp
+				if (queue->floor_target_queue[0] != -1) {
+					state->run_state == EXECUTE; //If more orders still in queue, returns to EXECUTE state
+				}
+				state->run_state == IDLE; //No more orderes, returns to IDLE state //If more orders still in queue, returns to EXECUTE state
+			}
+			break;
+
             /*
-             
              Sette door_open_lamp til 1
              Stoppe i 3 sekunder (sett på timer)
              

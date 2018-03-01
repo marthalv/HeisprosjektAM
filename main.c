@@ -66,13 +66,13 @@ int main()
             break;
         }
         */
-	
-
+	/*
+	Ligger vel nå i run state?
 	queue_add_to_up_and_down_queue(&queue_1);
 	queue_add_to_floor_target_queue(&queue_1, &state_1);
 	queue_delete_from_up_and_down_queue(&queue_1, &state_1);
 	queue_delete_from_floor_target_queue(&queue_1, &state_1);
-        
+     */  
 
     }
 
