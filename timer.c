@@ -9,14 +9,11 @@
 #include "timer.h"
 
 
-void timer_start_periode() { 
+int timer_start_periode() { 
 	timeout_time = clock() + (timer_period * CLOCKS_PER_SEC); 
+	return timeout_time;
 }; 
 
 int timer_time_is_up() { 
-	if (clock() >= timeout_time) {
-		return 1;
-	}
-	return 0;
-	
+	return (clock() >= timer_start_periode());
 }; 

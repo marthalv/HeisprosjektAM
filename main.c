@@ -1,6 +1,5 @@
 #include "elev.h"
 #include "timer.h"
-#include "lighthandler.h"
 #include "queue.h"
 #include "statemachine.h"
 #include "eventmanager.h"
@@ -23,8 +22,6 @@ int main()
     elev_set_motor_direction(DIRN_UP);
     struct State state_1;
     struct Queue queue_1;
-    
-    state_1.direction = DIRN_UP;
 
     queue_initialize(&queue_1); // Deletes all previous orders from the queues
 
@@ -34,17 +31,51 @@ int main()
 
     while (1)
     {
+        statemachine_set_current_state(&state_1);
 	
+	eventmanager_floor_indicator_light(&state_1);
+	eventmanager_update_lights(&queue_1, &state_1);
+
+	queue_add_to_up_and_down_queue(&queue_1);
+	queue_add_to_floor_target_queue(&queue_1, &state_1);
+
+
+
+
+
 	if (statemachine_check_for_possible_stop_elevator(&state_1, &queue_1) == 1)
     {
-		eventmanager_stop_elevator(&state_1);
-		timer_reset();
+		elev_set_motor_direction(DIRN_UP);
+		elev_set_motor_direction(DIRN_STOP);
+		queue_delete_from_up_and_down_queue(&queue_1, &state_1);
+		queue_delete_from_floor_target_queue(&queue_1, &state_1);   
+
+		if (state_1.current_position != -1)
+			elev_set_button_lamp(BUTTON_COMMAND, state_1.current_position, 0);
+
+		//timer_start_periode();
+		//if (timer_time_is_up() != 0) 
+		//	elev_set_motor_direction(DIRN_UP);
+
 	}
 
-        statemachine_set_current_state(&state_1);
-        eventcontroller_floor_indicator_light(&state_1);
-        //statemachine_set_ordered_floor(&state_1);
+
+	if (queue_1.floor_target_queue[0] != -1) { // DETTE FUNKER IKKE. PRØV Å FINNE UT HVA SOM ER FEIL
+
+		if (queue_1.floor_target_queue[0] > state_1.current_position)
+			elev_set_motor_direction(DIRN_STOP);
+			elev_set_motor_direction(DIRN_UP);
+
+		if (queue_1.floor_target_queue[0] < state_1.current_position)
+			elev_set_motor_direction(DIRN_STOP);
+			elev_set_motor_direction(DIRN_DOWN);
+
+	}	
+
 	
+
+
+
 
 
         // Change direction when we reach top/bottom floor
@@ -53,43 +84,25 @@ int main()
         
         else if (elev_get_floor_sensor_signal() == 0)
             elev_set_motor_direction(DIRN_UP);
+
+
+	//statemachine_run(&state_1, &queue_1);
+
         // Stop elevator and exit program if the stop button is pressed
         // VI HAR DENNE FUNKSJONALITETEN I STATEMACHINE_RUN
-        /*
+        
+	
          if (elev_get_stop_signal()) {
-            if (state->current_position != -1)
+            if (state_1.current_position != -1)
                 elev_set_door_open_lamp(1);
             
             elev_set_stop_lamp(1);
-            // elev_set_motor_direction(DIRN_STOP);  // HA DENNE I SWITCH I statemachine_run
-            state->run_state = EMERGENCY_STOP;
+            elev_set_motor_direction(DIRN_STOP);  // HA DENNE I SWITCH I statemachine_run
+            //state->run_state = EMERGENCY_STOP;
             break;
         }
-        */
-	/*
-	Ligger vel nå i run state?
-	queue_add_to_up_and_down_queue(&queue_1);
-	queue_add_to_floor_target_queue(&queue_1, &state_1);
-	queue_delete_from_up_and_down_queue(&queue_1, &state_1);
-	queue_delete_from_floor_target_queue(&queue_1, &state_1);
-     */  
-
+        
     }
 
-
-    
-    
-    /*
-     
-     If-setning som stopper basert på om statemachine-funksjonen statemachine_... returnerer 1 eller 0. Setter i gang timer.
-     
-     */
-    
-    
-    /*
-     
-     
-     
-     */
     return 0;
 }

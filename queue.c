@@ -35,19 +35,20 @@ void queue_add_to_up_and_down_queue (struct Queue* queue)
 // Adds orders that are made inside the elevator
 void queue_add_to_floor_target_queue (struct Queue* queue, struct State* state)
 {
-    
     for (int i = 0; i < N_FLOORS; i++)
     {
         if (queue->floor_target_queue[i] == state->ordered_floor)
             return;
         
-        if (queue->floor_target_queue[i] == -1)
-        {
-            queue->floor_target_queue[i] = state->ordered_floor;
-            // elev_set_button_lamp(BUTTON_COMMAND, state->ordered_floor, 1);
-            return;
-        }
-    }
+        if (queue->floor_target_queue[i] == -1) {
+		queue->floor_target_queue[i] = state->ordered_floor;
+		// elev_set_button_lamp(BUTTON_COMMAND, state->ordered_floor, 1);
+		return;
+
+	}	
+          
+     }
+ 
     
 }
 
@@ -72,23 +73,20 @@ void queue_delete_from_up_and_down_queue (struct Queue* queue, struct State* sta
 // Må få denne til å funke. Sjekk koder på github
 void queue_delete_from_floor_target_queue (struct Queue* queue, struct State* state) // lys nr 1 slukkes ikke om ingen andre lys er påtrykt
 { 
-    
-    if (state->current_position != -1) {
-        for (int i = 0; i < N_FLOORS; i++) {
+	for (int i = 0; i < N_FLOORS - 1; i++) {
 		if (queue->floor_target_queue[i] == state->current_position) {
-			//queue->floor_target_queue[i] = -1;
-            // elev_set_button_lamp(BUTTON_COMMAND, state->current_position, 0);
+			queue->floor_target_queue[3] = -1;
+			
+			for (int j = i; j < N_FLOORS - 1; j++) {
+				if (queue->floor_target_queue[j+1] == -1) {
+					queue->floor_target_queue[j] = -1;
+
+					break;
+				}
+				queue->floor_target_queue[j] = queue->floor_target_queue[j+1];
+			}
 		}
-	   }
 	}
-
-    for (int i = 0; i < N_FLOORS-1; i++) {
-        if (queue->floor_target_queue[i] == -1) {
-            queue->floor_target_queue[i] = queue->floor_target_queue[i+1];
-            queue->floor_target_queue[i+1] = -1;
-        }
-    }
-
 }
 
 
