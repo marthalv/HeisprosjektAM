@@ -1,0 +1,20 @@
+Følgende endringer er gjort:
+Generelt:
+- Endret på i-er til floor, tall til N_FLOORS osv.
+- Litt forbedret kodekvalitet
+
+eventmanager.c
+- Endret på eventmanager_floor_indicator_light() så den ble litt enklere. Sjekk om dette funker
+- Endret på eventmanager_update_lights() så den ble litt enklere. Sjekk om dette funker
+
+queue.c
+- Merget queue_add_to_floor_target_queue() og queue_add_to_up_and_down_queue() til én funksjon: queue_add_to_queue
+- Merget queue_delete_from_floor_target_queue() og queue_delete_from_up_and_down_queue() til én funksjon: queue_delete_from_queue
+- Endret også litt på queue_add_to_queue() slik at den sjekker om vi er i etasjen det bestilles til
+
+statemachine.c
+- Endret litt på casen IDLE, men ikke ferdig
+- Endret litt på statemachine_initialize() slik at den også sette direction og run_state
+- Endret navn på statemachine_check_for_possible_stop_elevator() til statemachine_check_for_stop()
+
+
