@@ -16,8 +16,9 @@ int floor_target_queue[N_FLOORS];
 };
 
 void queue_initialize (struct Queue* queue);
-void queue_add_to_queue (struct Queue* queue, struct State* state);
-void queue_delete_from_queue (struct Queue *queue, struct State *state);
+void queue_add_to_queue (struct Queue* queue);
+void queue_delete_from_queue (struct Queue* queue, struct State* state);
+
 
 
 
