@@ -1,0 +1,6 @@
+HUSK DETTE:
+
+statemachine.c
+statemachine_run()
+case EMERGENCY_STOP
+    Sjekk om bestillingene i køen blir ignorert mens stoppknappen er trykket
