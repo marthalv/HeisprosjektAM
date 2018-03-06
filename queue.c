@@ -49,11 +49,12 @@ void queue_delete_from_queue (struct Queue* queue, struct State* state)
 
         queue->going_down_queue[state->current_position] = 0;
       
-	queue->floor_target_queue[state->current_position] = 0;
+        queue->floor_target_queue[state->current_position] = 0;
 
     }
     
 }
+
 
 
 

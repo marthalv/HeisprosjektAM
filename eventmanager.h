@@ -10,7 +10,7 @@
 #include "timer.h"
 
 
-void eventmanager_stop_elevator (struct State* state);
+void eventmanager_set_direction(struct Queue* queue, struct State *state);
 void eventmanager_floor_indicator_light(struct State* state);
 void eventmanager_update_lights (struct Queue *queue, struct State *state);
 

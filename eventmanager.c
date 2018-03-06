@@ -1,19 +1,5 @@
 #include "eventmanager.h"
 
-void eventmanager_set_direction (struct State* state)
-{
-    if (state->direction == DIRN_STOP)
-    	elev_set_motor_direction(DIRN_STOP);
-
-    if (state->direction == DIRN_UP)
-	elev_set_motor_direction(DIRN_UP);
-
-    if (state->direction == DIRN_DOWN)
-	elev_set_motor_direction(DIRN_DOWN);
-
-}
-
-
 // Sets the floor indicator lights based on which position the elevator is in
 void eventmanager_floor_indicator_light (struct State* state)
 {
@@ -56,6 +42,13 @@ void eventmanager_update_lights (struct Queue *queue, struct State *state)
     }
 }
     
+void eventmanager_set_direction(struct Queue* queue, struct State *state)
+{
+    if (!(state->run_state == NORMAL_STOP || state->run_state == EXECUTE))
+        return;
+
+    elev_set_motor_direction(state->direction);
+}
 
  
 

@@ -22,31 +22,14 @@ int main()
     struct Queue queue_1;
 
     queue_initialize(&queue_1); // Deletes all previous orders from the queues
-
     statemachine_initialize(&state_1); // Makes sure that the elevator comes in a defined state
-    
-    int i = 0; 
+
     int time_now = 0;
     int exit = 0;
     printf("Press 1 to stop the elevator and exit the program");
     printf("%s", "\n");
-
-    while (1)
-    {
-	i++;
-
-
-	statemachine_run(&state_1, &queue_1, time_now); 
-	
-		
-
-	scanf("%d", &exit);
-
-	if (exit) 
-		elev_set_motor_direction(DIRN_STOP);
-		break;
-    }
-
+    
+    statemachine_run(&state_1, &queue_1, time_now);
 
     return 0;
 }
