@@ -5,6 +5,13 @@
 #include "timer.h"
 
 int main() {
+    
+    if (!elev_init())
+    {
+        printf("Unable to initialize elevator hardware!\n");
+        return 1;
+    }
+    
     int timer_start = 0;
     struct Queue order_list;
     struct State statemachine;
@@ -50,7 +57,7 @@ int main() {
                     }
                 }
                     
-                //Checks if we should go to other floor
+
                 int is_order = 0;
                 for (int floor = 0; floor < N_FLOORS; floor++)
                 {
@@ -60,6 +67,7 @@ int main() {
                         queue_add_to_floor_queue(&order_list, floor);
                     }
                 }
+                
                 if (order_list.floor_queue[0] != -1)
                     is_order = 1;
                 if (is_order)
@@ -71,11 +79,9 @@ int main() {
                 
             
             
-            
-            case EXECUTE:	//Going to target in target list
+            case EXECUTE:
                 {
                     
-                //Controls motor depending on where we need to go
                 if (statemachine.current_position == statemachine.current_floor)
                 {
                     if (order_list.floor_queue[0] > statemachine.current_floor && order_list.floor_queue[0] != -1)
@@ -84,7 +90,7 @@ int main() {
                         statemachine.current_direction = DIRN_DOWN;
                     }
 
-                    //Stops if we have arrived at target, or if we can pick up a passenger along the way
+                    
                 if (statemachine_check_for_stop(&statemachine, &order_list))
                     {
                         if (statemachine.current_direction == DIRN_UP || order_list.floor_queue[0] == statemachine.current_floor)
@@ -96,28 +102,27 @@ int main() {
                         statemachine.current_state = NORMAL_STOP;
                         break;
                     }
-                    
-                    
                     break;
                 }
                 
-                case NORMAL_STOP:	//Opens door for 3 seconds and lets passengers in
-                {
-                    statemachine.current_direction = DIRN_STOP;
-                    elev_set_door_open_lamp(1);
+                
+            case NORMAL_STOP:
+            {
+                statemachine.current_direction = DIRN_STOP;
+                elev_set_door_open_lamp(1);
                     
-                    timer_start += timer_start_timer();
+                timer_start += timer_start_timer();
                     
-                    if (timer_time_is_up(timer_start)) {
-                        elev_set_door_open_lamp(0);
-                        statemachine.current_state = IDLE;
-                        break;
-                    }
+                if (timer_time_is_up(timer_start)) {
+                    elev_set_door_open_lamp(0);
+                    statemachine.current_state = IDLE;
+                    break;
+                }
 
-                    break;
-                }
+                break;
+            }
                 
-                case EMERGENCY_STOP:	//EMERGENCY STOP
+            case EMERGENCY_STOP:
                 {
                     statemachine.current_direction = DIRN_STOP;
                     queue_initialize(&order_list);

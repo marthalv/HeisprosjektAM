@@ -5,7 +5,7 @@ void statemachine_set_current_state (struct State* statemachine) {
     statemachine->current_position = elev_get_floor_sensor_signal(); // Sets current position
     
     if (statemachine->current_position != -1)
-        statemachine->current_floor = statemachine->current_position; // Sets last floor
+        statemachine->current_floor = statemachine->current_position; // Sets current floor
 }
 
 
@@ -24,8 +24,6 @@ void statemachine_initialize(struct State* statemachine)
     
 }
 
-
-// Checks if the elevator should stop based on orders in the queues
 int statemachine_check_for_stop (struct State* statemachine, struct Queue* order_list)
 {
     if (statemachine->current_position == -1)
@@ -42,7 +40,7 @@ int statemachine_check_for_stop (struct State* statemachine, struct Queue* order
     
     for (int floor = 0; floor < 4; floor++) {
         if (order_list->floor_queue[floor] == statemachine->current_floor)
-            return 1; //Stops if a passenger wants of at this floor
+            return 1;
     }
     
     return 0;

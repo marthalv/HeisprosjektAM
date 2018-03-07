@@ -5,12 +5,12 @@
 #include "elev.h"
 #include "queue.h"
 
-typedef enum machine_states {IDLE, EXECUTE, NORMAL_STOP, EMERGENCY_STOP} run_state;
+typedef enum machine_states {IDLE, EXECUTE, NORMAL_STOP, EMERGENCY_STOP} machine_state;
 
 struct State {
     int current_floor; // Takes values between 0-3
     int current_position; // -1 if between floors, 0-3 if at a floor
-    run_state current_state; // Describes the current state the elevator is in
+    machine_state current_state; // Describes the current state the elevator is in
     elev_motor_direction_t current_direction; // The current direction the elevator drives
 };
 

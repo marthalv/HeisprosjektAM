@@ -9,7 +9,6 @@ struct Queue {
     int floor_queue[N_FLOORS];
     int up_queue[N_FLOORS];
     int down_queue[N_FLOORS];
-    
 };
 
 void queue_initialize(struct Queue* order_list);
