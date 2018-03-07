@@ -1,31 +1,21 @@
-#ifndef __INCLUDE_STATEMACHINE_H__
-#define __INCLUDE_STATEMACHINE_H__
-
-#pragma once
+#ifndef statemachine_h
+#define statemachine_h
 
 #include <stdio.h>
 #include "elev.h"
-#include "timer.h"
-#include "channels.h"
 #include "queue.h"
-#include "eventmanager.h"
 
-typedef enum current_state {IDLE, EXECUTE, NORMAL_STOP, EMERGENCY_STOP} current_state; 
+typedef enum machine_states {IDLE, EXECUTE, NORMAL_STOP, EMERGENCY_STOP} run_state;
 
-struct State
-{
-    int current_position; // The position the elevator is in right now, has values from 0-3, -1 if it is in between floors
-    int last_floor; // The last floor the sensor detected. Has values from 0-3, if it is in between floors it has the last floor it was at.
-    elev_motor_direction_t direction; // The direction the elevator moves in right now
-    current_state run_state; // The state the elevator is in right now
-    
+struct State {
+    int current_floor; // Takes values between 0-3
+    int current_position; // -1 if between floors, 0-3 if at a floor
+    run_state current_state; // Describes the current state the elevator is in
+    elev_motor_direction_t current_direction; // The current direction the elevator drives
 };
 
-void statemachine_set_current_state(struct State* state);
-void statemachine_initialize(struct State* state);
-int statemachine_check_for_stop(struct State* state, struct Queue* queue);
-void statemachine_run (struct State* state, struct Queue* queue, int timer_start);
+void statemachine_set_current_state (struct State* statemachine);
+void statemachine_initialize(struct State* statemachine);
+int statemachine_check_for_stop (struct State* statemachine, struct Queue* order_list);
 
-
-
-#endif
+#endif /* statemachine_h */

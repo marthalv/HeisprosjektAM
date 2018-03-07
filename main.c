@@ -1,98 +1,154 @@
-#include "elev.h"
-#include "timer.h"
-#include "queue.h"
-#include "statemachine.h"
-#include "eventmanager.h"
-#include "channels.h"
-#include "io.h"
 #include <stdio.h>
+#include "queue.h"
+#include "eventmanager.h"
+#include "statemachine.h"
+#include "timer.h"
 
-
-int main()
-{
-    // Initialize hardware
-    if (!elev_init())
-    {
-        printf("Unable to initialize elevator hardware!\n");
-        return 1;
-    }
-
-
-    struct State state_1;
-    struct Queue queue_1;
-
-    queue_initialize(&queue_1); // Deletes all previous orders from the queues
-    statemachine_initialize(&state_1); // Makes sure that the elevator comes in a defined state
-
-    int time_now = 0;
-    int exit = 0;
-    printf("Press 1 to stop the elevator and exit the program");
-    printf("%s", "\n");
+int main() {
+    int timer_start = 0;
+    struct Queue order_list;
+    struct State statemachine;
     
-    statemachine_run(&state_1, &queue_1, time_now);
-
-    return 0;
-}
-
-
+    queue_initialize(&order_list);
+    statemachine_initialize(&statemachine);
+    
+    while(1)
+    {
+        if (elev_get_stop_signal())
+            statemachine.current_state = EMERGENCY_STOP;
         
-	
-/*
-
-
-	if (queue_1.floor_target_queue[0] != -1) { // DETTE FUNKER IKKE. PRØV Å FINNE UT HVA SOM ER FEIL
-
-		if (queue_1.floor_target_queue[0] > state_1.current_position)
-			elev_set_motor_direction(DIRN_STOP);
-			elev_set_motor_direction(DIRN_UP);
-
-
-
-		if (queue_1.floor_target_queue[0] < state_1.current_position)
-
-			elev_set_motor_direction(DIRN_STOP);
-
-			elev_set_motor_direction(DIRN_DOWN);
-
-
-
-	}	
-
-*/
-
-/*
-	if (statemachine_check_for_stop(&state_1, &queue_1) == 1)
-
+        else
         {
-
-		elev_set_motor_direction(DIRN_UP);
-		elev_set_motor_direction(DIRN_STOP);
-
-		
-
-		queue_delete_from_queue(&queue_1, &state_1);
-		//time_now += timer_start_timer();
-		
-
-		
-	}
-*/
-
-/*
-	if (i % 100 == 0) {
-		for (int j = 0; j < N_FLOORS; j++) {
-			printf( "%d %s", j, "\n");
-			printf( "%d %d %d %s", queue_1.floor_target_queue[j], queue_1.going_up_queue[j], queue_1.going_down_queue[j], "\n");
-		}
-	}
-
-
-
-	// Change direction when we reach top/bottom floor
-        if (elev_get_floor_sensor_signal() == N_FLOORS - 1)
-            elev_set_motor_direction(DIRN_DOWN);
+            queue_update_up_down_queues(&order_list, &statemachine);
+            queue_update_floor_queue(&order_list, &statemachine);
+            statemachine_set_current_state (&statemachine);
+        }
         
-        else if (elev_get_floor_sensor_signal() == 0)
-            elev_set_motor_direction(DIRN_UP);
+        eventmanager_floor_indicator_light (&statemachine);
+        eventmanager_update_lights(&order_list, &statemachine);
+        
+        eventmanager_set_direction(&order_list, &statemachine);
+            
+        switch (statemachine.current_state)
+        {
+                    
+            case IDLE:
+            {
+                if (statemachine.current_position == statemachine.current_floor)
+                {
+                    int should_stop = (elev_get_button_signal(BUTTON_CALL_DOWN, statemachine.current_floor) || elev_get_button_signal(BUTTON_CALL_UP, statemachine.current_floor) || elev_get_button_signal(BUTTON_COMMAND, statemachine.current_floor));
+                                       
+                    if (should_stop) {
+                        order_list.up_queue[statemachine.current_floor] = 0;
+                        order_list.down_queue[statemachine.current_floor] = 0;
+                                           
+                        if (order_list.floor_queue[0] == statemachine.current_floor)
+                            queue_delete_from_floor_queue(&order_list, 0);
+                    
+                    statemachine.current_state = NORMAL_STOP;
+                    break;
+                    }
+                }
+                    
+                //Checks if we should go to other floor
+                int is_order = 0;
+                for (int floor = 0; floor < N_FLOORS; floor++)
+                {
+                    if (order_list.up_queue[floor] || order_list.down_queue[floor])
+                    {
+                        is_order = 1;
+                        queue_add_to_floor_queue(&order_list, floor);
+                    }
+                }
+                if (order_list.floor_queue[0] != -1)
+                    is_order = 1;
+                if (is_order)
+                    statemachine.current_state = EXECUTE;
+                    
+                    
+                break;
+            }
+                
+            
+            
+            
+            case EXECUTE:	//Going to target in target list
+                {
+                    
+                //Controls motor depending on where we need to go
+                if (statemachine.current_position == statemachine.current_floor)
+                {
+                    if (order_list.floor_queue[0] > statemachine.current_floor && order_list.floor_queue[0] != -1)
+                        statemachine.current_direction = DIRN_UP;
+                    if (order_list.floor_queue[0] < statemachine.current_floor && order_list.floor_queue[0] != -1)
+                        statemachine.current_direction = DIRN_DOWN;
+                    }
 
-*/ 
+                    //Stops if we have arrived at target, or if we can pick up a passenger along the way
+                if (statemachine_check_for_stop(&statemachine, &order_list))
+                    {
+                        if (statemachine.current_direction == DIRN_UP || order_list.floor_queue[0] == statemachine.current_floor)
+                            order_list.up_queue[statemachine.current_floor] = 0;
+                        if (statemachine.current_direction == DIRN_DOWN || order_list.floor_queue[0] == statemachine.current_floor)
+                            order_list.down_queue[statemachine.current_floor] = 0;
+                        
+                        queue_delete_from_floor_queue(&order_list, statemachine.current_floor);
+                        statemachine.current_state = NORMAL_STOP;
+                        break;
+                    }
+                    
+                    
+                    break;
+                }
+                
+                case NORMAL_STOP:	//Opens door for 3 seconds and lets passengers in
+                {
+                    statemachine.current_direction = DIRN_STOP;
+                    elev_set_door_open_lamp(1);
+                    
+                    timer_start += timer_start_timer();
+                    
+                    if (timer_time_is_up(timer_start)) {
+                        elev_set_door_open_lamp(0);
+                        statemachine.current_state = IDLE;
+                        break;
+                    }
+
+                    break;
+                }
+                
+                case EMERGENCY_STOP:	//EMERGENCY STOP
+                {
+                    statemachine.current_direction = DIRN_STOP;
+                    queue_initialize(&order_list);
+                    
+                    if (statemachine.current_position != -1) {
+                        elev_set_door_open_lamp(1);
+                    }
+                    
+                    elev_set_stop_lamp(1);
+                    
+                    if (!(elev_get_stop_signal())) {
+                        elev_set_stop_lamp(0);
+                        
+                        if (statemachine.current_position != -1) {
+                            statemachine.current_state = NORMAL_STOP;
+                            break;
+                        }
+                        
+                        statemachine.current_state = IDLE;
+                        elev_set_door_open_lamp(0);
+                        break;
+                    }
+                    break;
+                }
+                
+                default:
+                {
+                    printf("Nå er'e no feil her.");
+                }
+                    
+                    
+        }
+    }
+}

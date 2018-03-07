@@ -1,19 +1,12 @@
-#ifndef __INCLUDE_EVENTMANAGER_H__
-#define __INCLUDE_EVENTMANAGER_H__
-
-#pragma once
+#ifndef eventmanager_h
+#define eventmanager_h
 
 #include <stdio.h>
-#include "queue.h"
-#include "elev.h"
 #include "statemachine.h"
-#include "timer.h"
+#include "queue.h"
 
+void eventmanager_floor_indicator_light (struct State* statemachine);
+void eventmanager_set_direction(struct Queue* order_list, struct State* statemachine);
+void eventmanager_update_lights(struct Queue* order_list, struct State* statemachine);
 
-void eventmanager_set_direction(struct Queue* queue, struct State *state);
-void eventmanager_floor_indicator_light(struct State* state);
-void eventmanager_update_lights (struct Queue *queue, struct State *state);
-
-
-
-#endif
+#endif /* eventmanager_h */

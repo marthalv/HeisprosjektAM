@@ -1,25 +1,21 @@
-#ifndef __INCLUDE_QUEUE_H__
-#define __INCLUDE_QUEUE_H__
-
-#pragma once
+#ifndef queue_h
+#define queue_h
 
 #include <stdio.h>
 #include "elev.h"
 #include "statemachine.h"
-#include "timer.h"
 
-struct Queue
-{
-int going_up_queue[N_FLOORS];
-int going_down_queue[N_FLOORS];
-int floor_target_queue[N_FLOORS];
+struct Queue {
+    int floor_queue[N_FLOORS];
+    int up_queue[N_FLOORS];
+    int down_queue[N_FLOORS];
+    
 };
 
-void queue_initialize (struct Queue* queue);
-void queue_add_to_queue (struct Queue* queue);
-void queue_delete_from_queue (struct Queue* queue, struct State* state);
+void queue_initialize(struct Queue* order_list);
+void queue_update_up_down_queues(struct Queue* order_list, struct State* statemachine);
+void queue_add_to_floor_queue(struct Queue* order_list, int floor);
+void queue_update_floor_queue(struct Queue* order_list, struct State* statemachine);
+void queue_delete_from_floor_queue(struct Queue* order_list, int floor);
 
-
-
-
-#endif
+#endif /* queue_h */
