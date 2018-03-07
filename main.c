@@ -21,8 +21,9 @@ int main() {
     
     while(1)
     {
-        if (elev_get_stop_signal())
+        if (elev_get_stop_signal()) {
             statemachine.current_state = EMERGENCY_STOP;
+        }
         
         else
         {
