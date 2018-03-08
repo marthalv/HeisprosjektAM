@@ -19,31 +19,38 @@ void eventmanager_update_lights(struct Queue* order_list, struct State* statemac
 {
     for (int floor = 0; floor < N_FLOORS; floor++)
     {
-	int up_light, down_light;
+        int up_light = 0;
+        int down_light = 0;
 	
-	if (floor != 3)
-		up_light = order_list->up_queue[floor];
-	else 
-		up_light = 0;
+        if (floor != 3) {
+            up_light = order_list->up_queue[floor];
+        }
+        else {
+            up_light = 0;
+        }
 
-	if (floor != 0) 
-		down_light = order_list->down_queue[floor];
-	else 
-		up_light = 0;
+        if (floor != 0) {
+            down_light = order_list->down_queue[floor];
+        }
+        else {
+            up_light = 0;
+        }
 
-	if (floor != 3) 
-		elev_set_button_lamp(BUTTON_CALL_UP, floor, up_light);
+        if (floor != 3) {
+            elev_set_button_lamp(BUTTON_CALL_UP, floor, up_light);
+        }
 	
-	if (floor != 0)
-		elev_set_button_lamp(BUTTON_CALL_DOWN, floor, down_light);
+        if (floor != 0) {
+            elev_set_button_lamp(BUTTON_CALL_DOWN, floor, down_light);
+        }
 
-	elev_set_button_lamp(BUTTON_COMMAND, floor, 0);
+        elev_set_button_lamp(BUTTON_COMMAND, floor, 0);
 
-	for (int i = 0; i < N_FLOORS; i++) {
-		if (order_list->floor_queue[i] == floor && statemachine->current_position != floor)
+        for (int i = 0; i < N_FLOORS; i++) {
+            if (order_list->floor_queue[i] == floor && statemachine->current_position != floor) {
 			elev_set_button_lamp(BUTTON_COMMAND, floor, 1);
-	}
-
+            }
+        }
 	}
 }
 

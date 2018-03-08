@@ -19,5 +19,6 @@ struct State {
 void statemachine_set_current_state (struct State* statemachine);
 void statemachine_initialize(struct State* statemachine);
 int statemachine_check_for_stop (struct State* statemachine, struct Queue* order_list);
+void statemachine_stop (struct State* statemachine, struct Queue* order_list, int wait_time);
 
 #endif /* statemachine_h */

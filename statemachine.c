@@ -46,8 +46,7 @@ int statemachine_check_for_stop (struct State* statemachine, struct Queue* order
     return 0;
 }
 
-void statemachine_stop (struct State* statemachine, struct Queue* order_list) {
-		int wait_time = 3;
+void statemachine_stop (struct State* statemachine, struct Queue* order_list, int wait_time) {
 		clock_t start_time = clock();
 		clock_t timer = start_time; 
 		
@@ -56,7 +55,7 @@ void statemachine_stop (struct State* statemachine, struct Queue* order_list) {
            		queue_update_up_down_queues(order_list, statemachine);
            		queue_update_floor_queue(order_list, statemachine);
 
-            		statemachine_set_current_state (statemachine);
+                statemachine_set_current_state (statemachine);
 
        			eventmanager_floor_indicator_light (statemachine);
         		eventmanager_update_lights(order_list, statemachine);
@@ -80,7 +79,7 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
         	{
            	 queue_update_up_down_queues(order_list, statemachine);
            	 queue_update_floor_queue(order_list, statemachine);
-            	statemachine_set_current_state (statemachine);
+             statemachine_set_current_state (statemachine);
         	}         
         
        		eventmanager_floor_indicator_light (statemachine);
@@ -123,22 +122,17 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
                 }
                     
 
-                int is_order = 0;
                 for (int floor = 0; floor < N_FLOORS; floor++)
                 {
                     if (order_list->up_queue[floor] || order_list->down_queue[floor])
                     {
-                        is_order = 1;
                         queue_add_to_floor_queue(order_list, floor);
+                        statemachine->current_state = EXECUTE;
                     }
                 }
                 
                 if (order_list->floor_queue[0] != -1)
-                    is_order = 1;
-
-                if (is_order)
                     statemachine->current_state = EXECUTE;
-                    
                     
                 break;
             }
@@ -175,21 +169,19 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
             case NORMAL_STOP:
             {
                 //statemachine->current_direction = DIRN_STOP;
-		elev_set_motor_direction(DIRN_STOP);
+                elev_set_motor_direction(DIRN_STOP);
                 elev_set_door_open_lamp(1);
                 
-		statemachine_stop (statemachine, order_list);
-
-
+                statemachine_stop (statemachine, order_list, 3);
 		
-		if (order_list->floor_queue[0] != -1) {
-			statemachine->current_state = EXECUTE;
+                if (order_list->floor_queue[0] != -1) {
+                    statemachine->current_state = EXECUTE;
 			
-		}
+                }
 		
 
-		elev_set_door_open_lamp(0);
-		statemachine->current_state = IDLE;
+                elev_set_door_open_lamp(0);
+                statemachine->current_state = IDLE;
 
 
                 break;
@@ -202,7 +194,7 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
 
 		    while (elev_get_stop_signal()) {
 		    	queue_initialize(order_list);
-			elev_set_stop_lamp(1);
+                elev_set_stop_lamp(1);
                     	if (statemachine->current_position != -1) {
                         	elev_set_door_open_lamp(1);
                     	}
