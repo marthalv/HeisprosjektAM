@@ -33,10 +33,10 @@ void queue_add_to_floor_queue(struct Queue* order_list, int floor)
             return;
     }
     
-    for (int i = 0; i < N_FLOORS; i++) {
-        if (order_list->floor_queue[i] == -1)
+    for (int j = 0; j < N_FLOORS; j++) {
+        if (order_list->floor_queue[j] == -1)
         {
-            order_list->floor_queue[i] = floor;
+            order_list->floor_queue[j] = floor;
             return;
         }
     }
@@ -52,27 +52,6 @@ void queue_update_floor_queue(struct Queue* order_list, struct State* statemachi
 }
 
 
-void queue_delete_from_floor_queue(struct Queue* order_list, int floor) {
-    for (int j = 0; j < (N_FLOORS - 1); j++)
-    {
-        if (order_list->floor_queue[j] == floor)
-        {
-            order_list->floor_queue[N_FLOORS - 1] = -1;
-            for (int i = j; j < (N_FLOORS - 1); j++)
-            {
-                if (order_list->floor_queue[i+1] == -1)
-                {
-                    order_list->floor_queue[i] = -1;
-                    break;
-                }
-                order_list->floor_queue[i] = order_list->floor_queue[i+1];
-            }
-            break;
-        }
-    }
-}
-
-/*
 
 void queue_delete_from_floor_queue(struct Queue* order_list, int floor) {
     int found, pos;
@@ -88,7 +67,7 @@ void queue_delete_from_floor_queue(struct Queue* order_list, int floor) {
     
     if (found == 1)
     {
-        for (i = pos; i <  N_FLOORS - 1; i++)
+        for (int i = pos; i <  N_FLOORS - 1; i++)
         {
         order_list->floor_queue[i] = order_list->floor_queue[i + 1];
         }
@@ -96,7 +75,7 @@ void queue_delete_from_floor_queue(struct Queue* order_list, int floor) {
     
     order_list->floor_queue[N_FLOORS - 1] = -1;
 }
-*/
+
 
 
 
