@@ -163,8 +163,13 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
                     {
                         if (statemachine->current_direction == DIRN_UP || order_list->floor_queue[0] == statemachine->current_floor)
                             order_list->up_queue[statemachine->current_floor] = 0;
+				if (order_list->down_queue[statemachine->current_floor] == 1)
+					order_list->down_queue[statemachine->current_floor] = 0;
+
                         if (statemachine->current_direction == DIRN_DOWN || order_list->floor_queue[0] == statemachine->current_floor)
                             order_list->down_queue[statemachine->current_floor] = 0;
+				if (order_list->up_queue[statemachine->current_floor] == 1)
+					order_list->up_queue[statemachine->current_floor] = 0;
 
                         statemachine->current_state = NORMAL_STOP;
                         break;
@@ -175,7 +180,6 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
                 
             case NORMAL_STOP:
             {
-                //statemachine->current_direction = DIRN_STOP
 		queue_delete_from_floor_queue(order_list, statemachine->current_floor);
                 elev_set_motor_direction(DIRN_STOP);
                 elev_set_door_open_lamp(1);
@@ -197,8 +201,7 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
                 
             case EMERGENCY_STOP:
                 {
-		    elev_set_motor_direction(DIRN_STOP);
-                    //statemachine->current_direction = DIRN_STOP;
+		   elev_set_motor_direction(DIRN_STOP);
 
 		    while (elev_get_stop_signal()) {
 		    	queue_initialize(order_list);

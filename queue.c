@@ -17,11 +17,11 @@ void queue_update_up_down_queues(struct Queue* order_list, struct State* statema
 {
     for (int floor = 0; floor < N_FLOORS; floor++)
     {
-        if (!(statemachine->current_state == NORMAL_STOP && statemachine->current_position == floor))
-        {
-            order_list->down_queue[floor] = elev_get_button_signal(BUTTON_CALL_UP, floor) || order_list->down_queue[floor];
-            order_list->up_queue[floor] = elev_get_button_signal(BUTTON_CALL_DOWN, floor) || order_list->up_queue[floor];
-        }
+        if (statemachine->current_state == NORMAL_STOP && statemachine->current_position == floor)
+		return;
+       
+	order_list->down_queue[floor] = elev_get_button_signal(BUTTON_CALL_DOWN, floor) || order_list->down_queue[floor];
+	order_list->up_queue[floor] = elev_get_button_signal(BUTTON_CALL_UP, floor) || order_list->up_queue[floor];
     }
 }
 
