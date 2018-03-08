@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "elev.h"
 #include "queue.h"
+#include "eventmanager.h"
+#include <time.h>
 
 typedef enum machine_states {IDLE, EXECUTE, NORMAL_STOP, EMERGENCY_STOP} machine_state;
 

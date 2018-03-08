@@ -5,7 +5,13 @@
 #include <stdbool.h>
 #include <time.h>
 
-time_t timer_start_timer();
-int timer_time_is_up(time_t start_time);
+
+struct Timer {
+	int time_out;
+};
+
+void timer_delay(struct Timer* timer, int delay);
+int timer_time_is_up(struct Timer* timer);
+
 
 #endif /* timer_h */

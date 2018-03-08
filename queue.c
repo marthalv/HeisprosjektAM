@@ -17,7 +17,7 @@ void queue_update_up_down_queues(struct Queue* order_list, struct State* statema
 {
     for (int floor = 0; floor < N_FLOORS; floor++)
     {
-        if (!(statemachine->current_state == NORMAL_STOP &&  statemachine->current_position == floor))
+        if (!(statemachine->current_state == NORMAL_STOP && statemachine->current_position == floor))
         {
             order_list->down_queue[floor] = elev_get_button_signal(BUTTON_CALL_UP, floor) || order_list->down_queue[floor];
             order_list->up_queue[floor] = elev_get_button_signal(BUTTON_CALL_DOWN, floor) || order_list->up_queue[floor];
@@ -33,10 +33,10 @@ void queue_add_to_floor_queue(struct Queue* order_list, int floor)
             return;
     }
     
-    for (int j = 0; j < N_FLOORS; j++) {
-        if (order_list->floor_queue[j] == -1)
+    for (int i = 0; i < N_FLOORS; i++) {
+        if (order_list->floor_queue[i] == -1)
         {
-            order_list->floor_queue[j] = floor;
+            order_list->floor_queue[i] = floor;
             return;
         }
     }

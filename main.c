@@ -2,7 +2,6 @@
 #include "queue.h"
 #include "eventmanager.h"
 #include "statemachine.h"
-#include "timer.h"
 
 int main() {
     
@@ -12,15 +11,20 @@ int main() {
         return 1;
     }
     
-    int timer_start = 0;
     struct Queue order_list;
     struct State statemachine;
-    
+
     queue_initialize(&order_list);
     statemachine_initialize(&statemachine);
+    statemachine_run (&statemachine, &order_list);
     
-    while(1)
+   
+}
+/*
+ while(1)
     {
+	i++;
+
         if (elev_get_stop_signal()) {
             statemachine.current_state = EMERGENCY_STOP;
         }
@@ -36,6 +40,19 @@ int main() {
         eventmanager_update_lights(&order_list, &statemachine);
         
         eventmanager_set_direction(&order_list, &statemachine);
+
+	if (i % 12000 == 0) {
+		for (int j = 0; j < N_FLOORS; j++) {
+			printf("Etasje: ");
+			printf("%d", j);
+			printf("%s", "\n");
+
+			printf("Queues: ");
+			printf("%d %d %d", order_list.floor_queue[j], order_list.down_queue[j], order_list.up_queue[j]);
+			printf("%s", "\n");
+		}
+		printf("%d", timer.time_out);
+	}
             
         switch (statemachine.current_state)
         {
@@ -71,6 +88,7 @@ int main() {
                 
                 if (order_list.floor_queue[0] != -1)
                     is_order = 1;
+
                 if (is_order)
                     statemachine.current_state = EXECUTE;
                     
@@ -112,9 +130,9 @@ int main() {
                 statemachine.current_direction = DIRN_STOP;
                 elev_set_door_open_lamp(1);
                     
-                timer_start += timer_start_timer();
+                timer_delay(&timer, 3);
                     
-                if (timer_time_is_up(timer_start)) {
+                if (timer_time_is_up(&timer)) {
                     elev_set_door_open_lamp(0);
                     statemachine.current_state = IDLE;
                     break;
@@ -157,4 +175,4 @@ int main() {
                     
         }
     }
-}
+*/
