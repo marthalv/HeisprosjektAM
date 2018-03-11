@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "queue.h"
-#include "eventmanager.h"
 #include "statemachine.h"
 
 int main()

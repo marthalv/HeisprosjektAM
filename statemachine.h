@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "elev.h"
 #include "queue.h"
-#include "eventmanager.h"
+#include "lighthandler.h"
 #include <time.h>
 
 typedef enum states {IDLE, EXECUTE, NORMAL_STOP, EMERGENCY_STOP} machine_state; // The different states the elevator can be in
