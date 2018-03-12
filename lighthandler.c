@@ -36,14 +36,27 @@ void lighthandler_update_lights(struct Queue* order_list, struct State* statemac
             elev_set_button_lamp(BUTTON_CALL_DOWN, floor, down_light);
         
         
-        elev_set_button_lamp(BUTTON_COMMAND, floor, 0);
         
         for (int i = 0; i < N_FLOORS; i++)
         {
-            if (order_list->floor_queue[i] == floor && statemachine->current_position != floor)
-                elev_set_button_lamp(BUTTON_COMMAND, floor, 1);
-            
+            if ((elev_get_button_signal(BUTTON_COMMAND, i) == 1) && (statemachine->current_position != i))
+                elev_set_button_lamp(BUTTON_COMMAND, i, 1);
+
+            else if (order_list->floor_queue[i] == -1) {
+            	elev_set_button_lamp(BUTTON_COMMAND, statemachine->current_floor, 0);
         }
+
+        	if (statemachine->current_state == EMERGENCY_STOP) {
+        		for (int j = 0; j < N_FLOORS; j++) {
+        			elev_set_button_lamp(BUTTON_COMMAND, i, 0);
+        		}
+
+
+        	}
+ 
+        }
+
+
     }
 }
 

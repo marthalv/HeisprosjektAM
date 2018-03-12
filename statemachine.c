@@ -118,6 +118,7 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
             
             case IDLE:
             {
+                
                 if (statemachine->current_position == statemachine->current_floor)
                 {
                     int should_stop = (elev_get_button_signal(BUTTON_CALL_DOWN, statemachine->current_floor)
@@ -151,6 +152,7 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
                 if (order_list->floor_queue[0] != -1)
                     is_order = 1;
                 
+                
                 if (is_order)
                 {
                     statemachine->current_state = EXECUTE;
@@ -159,24 +161,21 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
                 
                 break;
             }
-            
+        
             
             case EXECUTE:
             {
-                    
-                if (statemachine->current_position == statemachine->current_floor)
+
+                if ((order_list->floor_queue[0] > statemachine->current_floor) && (order_list->floor_queue[0] != -1))
                 {
-                    if ((order_list->floor_queue[0] > statemachine->current_floor) && (order_list->floor_queue[0] != -1))
-                    {
-                        statemachine->current_direction = DIRN_UP;
-                        elev_set_motor_direction(DIRN_UP);
-                    }
+                    statemachine->current_direction = DIRN_UP;
+                    elev_set_motor_direction(DIRN_UP);
+                }
                 
-                    if ((order_list->floor_queue[0] < statemachine->current_floor) && (order_list->floor_queue[0] != -1))
-                    {
-                        statemachine->current_direction = DIRN_DOWN;
-                        elev_set_motor_direction(DIRN_DOWN);
-                    }
+                if ((order_list->floor_queue[0] < statemachine->current_floor) && (order_list->floor_queue[0] != -1))
+                {
+                    statemachine->current_direction = DIRN_DOWN;
+                    elev_set_motor_direction(DIRN_DOWN);
                 }
                 
             
@@ -250,10 +249,13 @@ void statemachine_run (struct State* statemachine, struct Queue* order_list) {
                     statemachine->current_state = NORMAL_STOP;
                     break;
                 }
-                
-                statemachine->current_state = IDLE;
+
+                    statemachine->current_state = IDLE;
+
                 elev_set_door_open_lamp(0);
                 break;
+             
+
             }
             
             
